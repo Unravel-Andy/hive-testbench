@@ -63,7 +63,7 @@ echo "TPC-H text data generation complete."
 # Create the text/flat tables as external tables. These will be later be converted to ORCFile.
 echo "Loading text data into external tables."
 HIVE="hive"
-if [[ "$HIVE" =~ ^beeline.* ]]; then
+if [[ "$HIVE" =~ ^beeline.* ]] || [[ $USE_BEELINE_ARGS == 'true' ]]; then
   HIVEVAR="--hivevar"
   runcommand "${HIVE} -i settings/load-flat.sql -f ddl-tpch/bin_flat/alltables.sql $HIVEVAR DB=tpch_text_${SCALE} $HIVEVAR LOCATION=${DIR}/${SCALE}"
 else
@@ -102,7 +102,7 @@ do
 	i=`expr $i + 1`
 done
 
-if [[ "$HIVE" =~ ^beeline.* ]]; then
+if [[ "$HIVE" =~ ^beeline.* ]] || [[ $USE_BEELINUE_ARGS ]]; then
   $HIVE -i settings/load-${SCHEMA_TYPE}.sql -f ddl-tpch/bin_${SCHEMA_TYPE}/analyze.sql;
 else
   $HIVE -i settings/load-${SCHEMA_TYPE}.sql -f ddl-tpch/bin_${SCHEMA_TYPE}/analyze.sql --database ${DATABASE};
