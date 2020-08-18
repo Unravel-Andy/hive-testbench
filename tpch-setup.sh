@@ -62,7 +62,7 @@ echo "TPC-H text data generation complete."
 
 # Create the text/flat tables as external tables. These will be later be converted to ORCFile.
 echo "Loading text data into external tables."
-Hive="hive"
+HIVE="hive"
 if [[ "$HIVE" =~ ^beeline.* ]]; then
   HIVEVAR="--hivevar"
   runcommand "${HIVE} -i settings/load-flat.sql -f ddl-tpch/bin_flat/alltables.sql $HIVEVAR DB=tpch_text_${SCALE} $HIVEVAR LOCATION=${DIR}/${SCALE}"
@@ -89,7 +89,7 @@ REDUCERS=$((test ${SCALE} -gt ${MAX_REDUCERS} && echo ${MAX_REDUCERS}) || echo $
 for t in ${TABLES}
 do
 	echo "Optimizing table $t ($i/$total)."
-	COMMAND="hive -i settings/load-${SCHEMA_TYPE}.sql -f ddl-tpch/bin_${SCHEMA_TYPE}/${t}.sql \
+	COMMAND="${HIVE} -i settings/load-${SCHEMA_TYPE}.sql -f ddl-tpch/bin_${SCHEMA_TYPE}/${t}.sql \
 	    $HIVEVAR DB=${DATABASE} \
 	    $HIVEVAR SOURCE=tpch_text_${SCALE} $HIVEVAR BUCKETS=${BUCKETS} \
             $HIVEVAR SCALE=${SCALE} $HIVEVAR REDUCERS=${REDUCERS} \
